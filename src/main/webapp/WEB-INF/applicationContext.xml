@@ -32,18 +32,18 @@
 
 	<bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">
 		<property name="converters">
-			<list>
+			<util:list>
 				<bean class="xdi2.transport.spring.XDI2SpringConverter" />
-			</list>
+			</util:list>
 		</property>
 	</bean>
 
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="locations">
-            <list>
+            <util:list>
                 <value>file:./etc/xdi2/xdi2-csp.properties</value>
                 <value>file:/etc/xdi2/xdi2-csp.properties</value>
-            </list>
+            </util:list>
         </property>
         <property name="ignoreResourceNotFound" value="true" />
         <property name="ignoreUnresolvablePlaceholders" value="false" />
@@ -57,7 +57,7 @@
 
 	<bean id="XdiAgent" class="xdi2.agent.impl.XDIBasicAgent">
 		<property name="agentRouters">
-			<list>
+			<util:list>
 				<bean class="xdi2.agent.routing.impl.bootstrap.XDIBootstrapLocalAgentRouter" />
 				<bean class="xdi2.agent.routing.impl.local.XDIMessagingTargetRegistryAgentRouter">
 					<property name="messagingTargetRegistry" ref="UriMessagingTargetRegistry" />
@@ -68,7 +68,7 @@
 				<bean class="xdi2.agent.routing.impl.http.XDIHttpDiscoveryAgentRouter">
 					<property name="xdiDiscoveryClient" ref="XdiDiscoveryClient" />
 				</bean>
-			</list>
+			</util:list>
 		</property>
 	</bean>
 
@@ -102,10 +102,12 @@
 				<bean class="xdi2.messaging.target.interceptor.impl.RefInterceptor" />
 				<bean class="xdi2.messaging.target.interceptor.impl.ToInterceptor" />
 				<bean class="xdi2.messaging.target.interceptor.impl.authentication.signature.AuthenticationSignatureInterceptor">
-					<property name="signatureValidator">
-						<bean class="xdi2.core.security.validate.RSADiscoveryPublicKeySignatureValidator">
-							<property name="xdiDiscoveryClient" ref="XdiDiscoveryClient" />
-						</bean>
+					<property name="signatureValidators">
+						<util:list>
+							<bean class="xdi2.core.security.validate.RSADiscoveryPublicKeySignatureValidator">
+								<property name="xdiDiscoveryClient" ref="XdiDiscoveryClient" />
+							</bean>
+						</util:list>
 					</property>
 				</bean>
 				<bean class="xdi2.messaging.target.interceptor.impl.authentication.secrettoken.AuthenticationSecretTokenInterceptor">
@@ -162,8 +164,10 @@
 				<bean class="xdi2.messaging.target.interceptor.impl.RefInterceptor" />
 				<bean class="xdi2.messaging.target.interceptor.impl.ToInterceptor" />
 				<bean class="xdi2.messaging.target.interceptor.impl.authentication.signature.AuthenticationSignatureInterceptor">
-					<property name="signatureValidator">
-						<bean class="xdi2.core.security.ec25519.validate.EC25519CloudNumberPublicKeySignatureValidator" />
+					<property name="signatureValidators">
+						<util:list>
+							<bean class="xdi2.core.security.ec25519.validate.EC25519CloudNumberPublicKeySignatureValidator" />
+						</util:list>
 					</property>
 				</bean>
 				<bean class="xdi2.messaging.target.interceptor.impl.authentication.secrettoken.AuthenticationSecretTokenInterceptor">
